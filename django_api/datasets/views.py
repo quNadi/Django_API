@@ -10,45 +10,48 @@ from .serializers import DataSerializers
 
 from django.core.exceptions import ObjectDoesNotExist
 
-class JSONResponse(HttpResponse):
-    def __init__(self,data,**kwargs):
-        content=JSONRenderer().render(data)
-        kwargs['content_type']="application/json"
-        super(JSONResponse,self).__init__(content,**kwargs)
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
-@csrf_exempt
+#class JSONResponse(HttpResponse):
+#    def __init__(self,data,**kwargs):
+#        content=JSONRenderer().render(data)
+#        kwargs['content_type']="application/json"
+#        super(JSONResponse,self).__init__(content,**kwargs)
+
+#@csrf_exempt
+@api_view(['GET','POST'])
 def data_list(request):
     if request.method=='GET':
         datasets=DataSet.objects.all()
         dataserial=DataSerializers(datasets,many=True)
-        return JSONResponse(dataserial.data)
+        return Response(dataserial.data)
     elif request.method=='POST':
-        data_set=JSONParser().parse(request)
-        dataserial=DataSerializers(data=data_set)
+        dataserial=DataSerializers(data=request.data)
         if dataserial.is_valid():
             dataserial.save()
-            return JSONResponse(dataserial.data,status=status.HTTP_201_CREATED)
-        return JSONResponse(dataserial.errors,status=status.HTTP_400_BAD_REQUEST)
+            return Response(dataserial.data,status=status.HTTP_201_CREATED)
+        return Response(dataserial.errors,status=status.HTTP_400_BAD_REQUEST)
 
-@csrf_exempt
+#@csrf_exempt
+@api_view(['GET','PUT','DELETE'])
 def data_set_one(request,pk):
     try:
         dataset=DataSet.objects.get(pk=pk)
     except ObjectDoesNotExist:
-        return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method=='GET':
         dataserial=DataSerializers(dataset)
-        return JSONResponse(dataserial.data)
+        return Response(dataserial.data)
 
     elif request.method=="PUT":
-        data_set=JSONParser().parse(request)
-        dataserial=DataSerializers(dataset,data=data_set)
+        dataserial=DataSerializers(dataset,data=request.data)
         if dataserial.is_valid():
             dataserial.save()
-            return JSONResponse(dataserial.data)
-        return JSONResponse(dataserial.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(dataserial.data)
+        return Response(dataserial.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method=="DELETE":
         dataset.delete()
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
