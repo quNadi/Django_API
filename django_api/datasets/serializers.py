@@ -1,12 +1,13 @@
 from rest_framework import serializers
-from .models import DataSet,DataCat,DataPackage,Researcher
+
+from .models import DataSet, DataCat, DataPackage, Researcher
 
 
 class DataCatSerializer(serializers.HyperlinkedModelSerializer):
     datasets=serializers.HyperlinkedRelatedField(
         many=True,
         read_only=True,
-        view_name='data-detail')
+        view_name='dataset-detail')
     class Meta:
         model=DataCat
         fields=(
@@ -19,7 +20,7 @@ class DataCatSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class DataSerializers(serializers.ModelSerializer):
-    data_cat=serializers.SlugRelatedField(queryset=DataCat.objects.all(),slug_field='title')
+    category=serializers.SlugRelatedField(queryset=DataCat.objects.all(),slug_field='kind')
     class Meta:
         model=DataSet
         fields=('url',
@@ -37,13 +38,13 @@ class DataPackageSerial(serializers.HyperlinkedModelSerializer):
         fields=(
             'url',
             'pk',
-            'class_type'
+            'class_type' ,
             'dataset'
         )
 
 
 class ResearcherSerial(serializers.HyperlinkedModelSerializer):
-    datapack = DataPackageSerial()
+    datapack = DataPackageSerial(many=True,read_only=True)
     origin=serializers.ChoiceField(
         choices=Researcher.CHOICES
     )

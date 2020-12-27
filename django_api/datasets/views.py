@@ -28,12 +28,12 @@ class DataCatDetail(generics.RetrieveUpdateDestroyAPIView):
 class DataList(generics.ListCreateAPIView):
     queryset = DataSet.objects.all()
     serializer_class = DataSerializers
-    name='data-list'
+    name='dataset-list'
 
 class DataDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = DataSet.objects.all()
     serializer_class = DataSerializers
-    name = 'data-detail'
+    name = 'dataset-detail'
 
 class ResearcherList(generics.ListCreateAPIView):
     queryset = Researcher.objects.all()
