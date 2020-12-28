@@ -15,10 +15,22 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from django_filters import AllValuesFilter,DateTimeFilter,NumberFilter,FilterSet
+
+
 class DataCatList(generics.ListCreateAPIView):
     queryset =DataCat.objects.all()
     serializer_class = DataCatSerializer
     name='datacat-list'
+    filter_fields=(
+        'kind' ,
+    )
+    search_fields=(
+        'kind'   ,
+    )
+    ordering_fields=(
+        'kind' ,
+    )
 
 class DataCatDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset =DataCat.objects.all()
@@ -29,6 +41,20 @@ class DataList(generics.ListCreateAPIView):
     queryset = DataSet.objects.all()
     serializer_class = DataSerializers
     name='dataset-list'
+    filter_fields=(
+        'title',
+        'category',
+        'set',
+        'content',
+        'inserted' ,
+    )
+    search_fields=(
+        '^title',
+    )
+    ordering_fields=(
+        'title',
+        'inserted'  ,
+    )
 
 class DataDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = DataSet.objects.all()
@@ -39,16 +65,34 @@ class ResearcherList(generics.ListCreateAPIView):
     queryset = Researcher.objects.all()
     serializer_class = ResearcherSerial
     name='researcher-list'
+    filter_fields=(
+        'name',
+        'origin',
+        'inserted'  ,
+    )
+    search_fields=(
+        '^name' ,
+    )
+    ordering_fields=(
+        'name',
+        'inserted'     ,
+    )
 
 class ResearcherDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Researcher.objects.all()
     serializer_class = ResearcherSerial
     name="researcher-detail"
 
+
+
 class DataPackList(generics.ListCreateAPIView):
     queryset = DataPackage.objects.all()
     serializer_class = ResearcherPackageSerial
     name='pack-list'
+
+    ordering_fields=(
+        'type_class'   ,
+    )
 
 class DataPackDetail(generics.RetrieveUpdateDestroyAPIView):
     query_set=DataPackage.objects.all()
