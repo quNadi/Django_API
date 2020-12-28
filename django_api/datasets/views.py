@@ -15,7 +15,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from django_filters import AllValuesFilter,DateTimeFilter,NumberFilter,FilterSet
+from rest_framework import permissions
+from .permissionsuser import IsUserOwnerReadOnly
 
 
 class DataCatList(generics.ListCreateAPIView):
@@ -53,13 +54,26 @@ class DataList(generics.ListCreateAPIView):
     )
     ordering_fields=(
         'title',
-        'inserted'  ,
+        'inserted',
     )
+
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        IsUserOwnerReadOnly,
+    )
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 class DataDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = DataSet.objects.all()
     serializer_class = DataSerializers
     name = 'dataset-detail'
+
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        IsUserOwnerReadOnly,
+    )
 
 class ResearcherList(generics.ListCreateAPIView):
     queryset = Researcher.objects.all()
@@ -75,7 +89,7 @@ class ResearcherList(generics.ListCreateAPIView):
     )
     ordering_fields=(
         'name',
-        'inserted'     ,
+        'inserted'     ,      
     )
 
 class ResearcherDetail(generics.RetrieveUpdateDestroyAPIView):

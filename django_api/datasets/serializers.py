@@ -2,6 +2,26 @@ from rest_framework import serializers
 
 from .models import DataSet, DataCat, DataPackage, Researcher
 
+from django.contrib.auth.models import User
+
+class UserDataSerial(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model=DataSet
+        fields=(
+            'url',
+            'title'
+        )
+
+class UserSerial(serializers.HyperlinkedModelSerializer):
+    datasets=UserDataSerial( many=True, read_only=True)
+    class Meta:
+        model=User
+        fields=(
+            'url',
+            'pk',
+            'username',
+            'datasets'
+        )
 
 class DataCatSerializer(serializers.HyperlinkedModelSerializer):
     datasets=serializers.HyperlinkedRelatedField(
@@ -21,10 +41,13 @@ class DataCatSerializer(serializers.HyperlinkedModelSerializer):
 
 class DataSerializers(serializers.ModelSerializer):
     category=serializers.SlugRelatedField(queryset=DataCat.objects.all(),slug_field='kind')
+    #user auth
+    owner=serializers.ReadOnlyField(source='owner.username')
     class Meta:
         model=DataSet
         fields=('url',
                 'title',
+                'owner',
                 'content',
                 'set',
                 'category',

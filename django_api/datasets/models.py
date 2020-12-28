@@ -18,6 +18,13 @@ class DataSet(models.Model):
     category=models.ForeignKey(DataCat,related_name='datasets',on_delete=models.CASCADE)
     inserted=models.DateTimeField(auto_now_add=True)
 
+    #authentication
+    owner=models.ForeignKey(
+        'auth.User',
+        related_name='datasets',
+        on_delete=models.CASCADE
+    )
+
     objects=models.Manager()
 
     class Meta:
