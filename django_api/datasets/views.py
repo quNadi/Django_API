@@ -21,6 +21,8 @@ from .permissionsuser import IsUserOwnerReadOnly
 from rest_framework.authentication import  TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+from rest_framework.throttling import ScopedRateThrottle,UserRateThrottle
+
 class DataCatList(generics.ListCreateAPIView):
     queryset =DataCat.objects.all()
     serializer_class = DataCatSerializer
@@ -36,11 +38,14 @@ class DataCatList(generics.ListCreateAPIView):
     )
 
 class DataCatDetail(generics.RetrieveUpdateDestroyAPIView):
+
     queryset =DataCat.objects.all()
     serializer_class = DataCatSerializer
     name='datacat-detail'
 
 class DataList(generics.ListCreateAPIView):
+    throttle_scope="data"
+    throttle_classes = (ScopedRateThrottle,)
     queryset = DataSet.objects.all()
     serializer_class = DataSerializers
     name='dataset-list'
@@ -68,6 +73,8 @@ class DataList(generics.ListCreateAPIView):
         serializer.save(owner=self.request.user)
 
 class DataDetail(generics.RetrieveUpdateDestroyAPIView):
+    throttle_scope = "data"
+    throttle_classes = (ScopedRateThrottle,)
     queryset = DataSet.objects.all()
     serializer_class = DataSerializers
     name = 'dataset-detail'
@@ -78,6 +85,8 @@ class DataDetail(generics.RetrieveUpdateDestroyAPIView):
     )
 
 class ResearcherList(generics.ListCreateAPIView):
+    throttle_scope = "researcher"
+    throttle_classes = (ScopedRateThrottle,)
     queryset = Researcher.objects.all()
     serializer_class = ResearcherSerial
     name='researcher-list'
@@ -102,6 +111,8 @@ class ResearcherList(generics.ListCreateAPIView):
     )
 
 class ResearcherDetail(generics.RetrieveUpdateDestroyAPIView):
+    throttle_scope = "researcher"
+    throttle_classes = (ScopedRateThrottle,)
     queryset = Researcher.objects.all()
     serializer_class = ResearcherSerial
     name="researcher-detail"
