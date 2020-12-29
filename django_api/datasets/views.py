@@ -18,6 +18,8 @@ from rest_framework.response import Response
 from rest_framework import permissions
 from .permissionsuser import IsUserOwnerReadOnly
 
+from rest_framework.authentication import  TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 class DataCatList(generics.ListCreateAPIView):
     queryset =DataCat.objects.all()
@@ -89,7 +91,14 @@ class ResearcherList(generics.ListCreateAPIView):
     )
     ordering_fields=(
         'name',
-        'inserted'     ,      
+        'inserted',
+    )
+
+    authentication_classes = (
+        TokenAuthentication,
+    )
+    permission_classes = (
+        IsAuthenticated,
     )
 
 class ResearcherDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -97,7 +106,12 @@ class ResearcherDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ResearcherSerial
     name="researcher-detail"
 
-
+    authentication_classes = (
+        TokenAuthentication,
+    )
+    permission_classes = (
+        IsAuthenticated,
+    )
 
 class DataPackList(generics.ListCreateAPIView):
     queryset = DataPackage.objects.all()
