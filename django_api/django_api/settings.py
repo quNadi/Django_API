@@ -145,5 +145,7 @@ REST_FRAMEWORK={
         'user':'10/hour',
         'data':'2/hour',
         'researcher':'15/hour',
-    }
+    }    ,
+    'DEFAULT_VERSIONING_CLASS':
+    'rest_framework.versioning.NamespaceVersioning',
 }
