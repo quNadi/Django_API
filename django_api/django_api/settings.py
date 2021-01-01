@@ -141,9 +141,9 @@ REST_FRAMEWORK={
         'rest_framework.throttling.UserRateThrottle',
     ) ,
     'DEFAULT_THROTTLE_RATES':{
-        'anon':'5/hour',
-        'user':'10/hour',
-        'data':'2/hour',
+        'anon':'20/hour',
+        'user':'30/hour',
+        'data':'30/hour',
         'researcher':'15/hour',
     }    ,
     'DEFAULT_VERSIONING_CLASS':

@@ -1,7 +1,7 @@
 from django.db import models
 
 class DataCat(models.Model):
-    kind=models.CharField(max_length=200)
+    kind=models.CharField(max_length=200, unique=True)
 
     class Meta:
         ordering=('kind',)
