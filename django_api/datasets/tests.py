@@ -43,3 +43,22 @@ class DataCatTest(APITestCase):
         assert res.status_code == status.HTTP_200_OK
         assert res.data['count'] == 1
         assert res.data['results'][0]['kind']==cat_name
+
+    def get_cat_collect(self):
+        new_cat="super"
+        self.post_category(new_cat)
+        url=reverse(views.DataCatList.name)
+        res=self.client.get(url,format='json')
+        assert res.status_code==status.HTTP_200_OK
+        assert res.data['count']==1
+        assert res.data['results'][0]['kind'] ==new_cat
+
+    def test_update_cat(self):
+        new_cat="initial"
+        res=self.post_category(new_cat)
+        url=reverse(views.DataCatDetail.name,None,{res.data['pk']})
+        update_cat="updated"
+        data={'kind':update_cat}
+        patch_res=self.client.patch(url,data,format="json")
+        assert patch_res.status_code==status.HTTP_200_OK
+        assert patch_res.data['kind']==update_cat
