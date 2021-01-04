@@ -1,6 +1,16 @@
 from django.urls import include,path
 from django.conf.urls import url
 
+#alternatywnie urls.py
+
+from rest_framework.routers import SimpleRouter
+
+from .viewset import UserViewSet, PostViewSet
+
+router=SimpleRouter()
+router.register('users',UserViewSet,basename='users')
+router.register('posts',PostViewSet,basename='posts')
+
 from .views import DataPackList,DataList,DataDetail,DataCatDetail,DataCatList,DataPackDetail,ResearcherDetail,ResearcherList,ApiRoot ,HomeLabView
 
 urlpatterns=[
@@ -13,6 +23,8 @@ urlpatterns=[
     path('pack/',DataPackList.as_view(),name=DataPackList.name) ,
     path('pack/<int:pk>',DataPackDetail.as_view(),name=DataPackDetail.name),
     path('',ApiRoot.as_view(),name=ApiRoot.name) ,
-    path('homelab',HomeLabView.as_view())
+    path('homelab',HomeLabView.as_view()),
 
 ]
+urlpatterns=router.urls
+

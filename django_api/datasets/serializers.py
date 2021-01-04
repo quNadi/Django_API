@@ -12,6 +12,11 @@ class UserDataSerial(serializers.HyperlinkedModelSerializer):
             'title'
         )
 
+class UserSerializers(serializers.ModelSerializer):
+    class Meta:
+        model=User
+        fields=('id',"username")
+
 class UserSerial(serializers.HyperlinkedModelSerializer):
     datasets=UserDataSerial( many=True, read_only=True)
     class Meta:
