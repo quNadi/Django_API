@@ -1,7 +1,7 @@
 from django.urls import include,path
 from django.conf.urls import url
 
-from .views import DataPackList,DataList,DataDetail,DataCatDetail,DataCatList,DataPackDetail,ResearcherDetail,ResearcherList,ApiRoot
+from .views import DataPackList,DataList,DataDetail,DataCatDetail,DataCatList,DataPackDetail,ResearcherDetail,ResearcherList,ApiRoot ,HomeLabView
 
 urlpatterns=[
     path('datacat/',DataCatList.as_view(),name=DataCatList.name),
@@ -12,6 +12,7 @@ urlpatterns=[
     path('researcher/<int:pk>',ResearcherDetail.as_view(),name=ResearcherDetail.name) ,
     path('pack/',DataPackList.as_view(),name=DataPackList.name) ,
     path('pack/<int:pk>',DataPackDetail.as_view(),name=DataPackDetail.name),
-    path('',ApiRoot.as_view(),name=ApiRoot.name)
+    path('',ApiRoot.as_view(),name=ApiRoot.name) ,
+    path('homelab',HomeLabView.as_view())
 
 ]

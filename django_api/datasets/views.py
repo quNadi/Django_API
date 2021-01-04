@@ -23,6 +23,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from rest_framework.throttling import ScopedRateThrottle,UserRateThrottle
 
+from django.views import View
+
 class DataCatList(generics.ListCreateAPIView):
     queryset =DataCat.objects.all()
     serializer_class = DataCatSerializer
@@ -151,6 +153,12 @@ class ApiRoot(generics.GenericAPIView):
         })
 
 
+class HomeLabView(View):
+    template_name='homePage.html'
+
+    def get(self,request):
+        datasets=DataSet.objects.order_by('?')[:5]
+        return render(request,self.template_name,{'datasets':datasets})
 #class JSONResponse(HttpResponse):
 #    def __init__(self,data,**kwargs):
 #        content=JSONRenderer().render(data)
